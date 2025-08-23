@@ -1,3 +1,13 @@
+**For those who want the fixed Linux support**: Please download the prebuilt native library from this repo and **replace** the corresponding file in your project after importing the original Unity package (Unfortunately I don't know how to make a Unity package).
+
+The prebuilt native lib is [`Assets/StandaloneFileBrowser/Plugins/Linux/x86_64/libStandaloneFileBrowser.so`](Assets/StandaloneFileBrowser/Plugins/Linux/x86_64/libStandaloneFileBrowser.so).
+
+You can also build it by yourself. The native Linux library's code in under [`Plugins/Linux/StandaloneFileBrowser`](Plugins/Linux/StandaloneFileBrowser). Make sure you have GTK+'s headers installed and run `make` (NOT `cmake`) to build it.
+
+**Technical details**: The original code loads GTK+ inside the Unity process. It causes the `gtk_init` function to hang in a deadlock (See the backtrace [here](https://github.com/gkngkc/UnityStandaloneFileBrowser/issues/43#issuecomment-864010542)). I separated the GTK+ related code to a new executable (I'm not sure about Unity's directory structure so I bundled the executable in the library) and run it in a separated process (pass input with `argv` and get output from `pipe()`-d `stdout`) when opening a dialog.
+
+---
+
 # Unity Standalone File Browser
 
 A simple wrapper for native file dialogs on Windows/Mac/Linux.
